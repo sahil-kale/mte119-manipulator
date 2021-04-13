@@ -96,14 +96,15 @@ if __name__ == '__main__':
     a2_F = 0
     a3_F = 0
 
-    interval_start = 0.5
-    interval_end = 1.78
-    divisions = 50
+    interval_start = 0.01
+    interval_end = 5
+    divisions = 150
+    iterator = 0
 
-    for a1 in np.linspace(0.6, 0.7, num=divisions):
-        for a2 in np.linspace(1.7, 1.8, num=divisions):
-            for a3 in np.linspace(1.5, 1.6, num=divisions):
-
+    for a1 in np.linspace(interval_start, interval_end, num=divisions):
+        for a2 in np.linspace(interval_start, interval_end, num=divisions):
+            for a3 in np.linspace(interval_start, interval_end, num=divisions):
+                iterator += 1
                 torque= execute(a1,a2,a3)
                 if(torque is not None and torque < minTorque):
                     minTorque = torque
@@ -112,7 +113,14 @@ if __name__ == '__main__':
                     a3_F = a3
                     print("Current Torque:" + str(minTorque))
                     print("lengths: " + str(a1) + " " + str(a2) + " " + str(a3))
+                else:
+                    print("No match found - iteration: " + str(iterator))
 
+    a1_F = a1
+    a2_F = a2
+    a3_F = a3
+    print("Final Torque:" + str(minTorque))
+    print("lengths: " + str(a1) + " " + str(a2) + " " + str(a3))
     #visualize(a1_x, a1_y, a2_x, a2_y, g_x, g_y)
     
     plt.show()
