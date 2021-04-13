@@ -1,34 +1,32 @@
 import matplotlib.pyplot as plt
-from math import *
+import math
 
-if __name__ == '__main__':
-    g_x = [0.75, 0.50, 0.20]
-    g_y = [0.10, 0.50, 0.60]
-    theta = [-0.60 / 180 * pi, 0, 0.45 / 180 * pi]
+g_x = [75, 50, 20];
+g_y = [10, 50, 60];
+theta = [-60 * math.pi / 180, 0, 45 * math.pi / 180];
 
-    pos = 2
+pos = 2;
 
-    a1 = 0.7102204408817635
-    a2 = 1.6923847695390781
-    a3 = 1.5064128256513027
+a1 = 0.7221105527638191 * 100;
+a2 = 1.7477386934673367 * 100;
 
-    xdist = cos(theta[pos]) * a3
-    ydist = sin(theta[pos]) * a3
+a3 = 1.5517587939698492 * 100;
 
-    Ex = g_x[pos] - xdist
-    Ey = g_y[pos] - ydist
+xdist = math.cos(theta[pos]) * a3;
+ydist = math.sin(theta[pos]) * a3;
 
-    q2 = -acos((Ex * Ex + Ey * Ey - a1 * a1 - a2 * a2) / (2 * a1 * a2))
-    q1 = atan(Ey / Ex) + atan((a2 * sin(q2)) / (a1 + a2 * cos(q2)))
+Ex = g_x[pos] - xdist;
+Ey = g_y[pos] - ydist;
 
-    a1_x = cos(q1) * a1
-    a1_y = sin(q1) * a1
+q2 = -math.acos((math.pow(Ex, 2) + math.pow(Ey, 2) - math.pow(a1, 2) - math.pow(a2, 2)) / (2 * a1 * a2));
+q1 = math.atan(Ey / Ex) + math.atan((a2 * math.sin(q2)) / (a1 + a2 * math.cos(q2)));
 
-    a2_x = cos(q1 - q2) * a2 + a1_x
-    a2_y = sin(q1 - q2) * a2 + a1_y
+a1_x = math.cos(q1) * a1;
+a1_y = math.sin(q1) * a1;
 
-    x_val = [0, a1_x, a2_x, g_x[pos]]
-    y_val = [0, a1_y, a2_y, g_y[pos]]
+a2_x = math.cos(q1 - q2) * a2 + a1_x;
+a2_y = math.sin(q1 - q2) * a2 + a1_y;
 
-    plt.plot(x_val, y_val, marker = '.')
-    plt.show()
+plt.plot([0, a1_x, a2_x], [0, a1_y, a2_y])
+plt.plot([Ex, g_x[pos]], [Ey, g_y[pos]])
+plt.show()
