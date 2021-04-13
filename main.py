@@ -32,11 +32,7 @@ def calcTorque(x_1: float, x_2: float, length: float, geoConst: int):
 
 
 def calcLinkAngles(Ex: float, Ey: float, a1: float, a2: float):
-    # try:
     q2 = math.acos((math.pow(Ex, 2) + math.pow(Ey, 2) - math.pow(a1, 2) - math.pow(a2, 2)) / (2 * a1 * a2))
-    # except:
-    #    print("Error! " + str(a1) + " " + str(a2) + " " + str(Ex) + " " + str(Ey))
-    #    exit()
 
     q1 = math.atan(Ey / Ex) + math.atan((a2 * math.sin(q2)) / (a1 + a2 * math.cos(q2)))
     return q1, q2
@@ -53,7 +49,7 @@ def calcLinkCoords(q1: float, q2: float, a1: float, a2: float):
 
 # This function will ensure that the lengts are valid.
 def execute(a1: float, a2: float, a3: float):
-    if (a1 + a2 + a3 <= 1):
+    if (a1 + a2 + a3) <= 1:
         # Numbers are invalid if they're here
         return None
 
@@ -64,12 +60,15 @@ def execute(a1: float, a2: float, a3: float):
         # Calculate the new Final Point for a1 and a2 to reach
         Ex, Ey = calcNewFinalPoints(a3, pos)
         # check whether a1 and 2 can reach the new final point
-        if (not checkValid(a1, a2, Ex, Ey)):
+        if not checkValid(a1, a2, Ex, Ey):
             return None
         # Numbers are valid from here on out:
 
         # calculating link angles for a1 and a2
         q1, q2 = calcLinkAngles(Ex, Ey, a1, a2)
+
+        if q2 < (5 * math.pi / 180) or q2 > (math.pi - 5 * math.pi / 180):
+            return None
 
         # calculate the end points of a1 and a2 links
         a1_x, a1_y, a2_x, a2_y = calcLinkCoords(q1, q2, a1, a2)
@@ -103,9 +102,9 @@ if __name__ == '__main__':
     a2_F = 0
     a3_F = 0
 
-    interval_start = 0
-    interval_end = 3
-    divisions = 300
+    interval_start = 0.1
+    interval_end = 5
+    divisions = 100
     iterator = 0
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -115,30 +114,14 @@ if __name__ == '__main__':
                 for a3 in np.linspace(interval_start, interval_end, num = divisions):
                     futures.append(executor.submit(execute, a1 = a1, a2 = a2, a3 = a3))
                     iterator += 1
-                    if(iterator % 10000 == 0):
-                        print("iteration: " + str(iterator) + " | %" + str(iterator/divisions**3*100))
-                    
+                    if (iterator % 10000 == 0):
+                        print("iteration: " + str(iterator) + " | %" + str(iterator / divisions ** 3 * 100))
 
         for future in concurrent.futures.as_completed(futures):
             if future.result() is not None:
                 data = future.result()
-                
 
                 if data[0] < minTorque:
                     minTorque = data[0]
                     print("Current Torque:" + str(minTorque))
                     print("lengths: " + str(data[1]) + " " + str(data[2]) + " " + str(data[3]))
-                    
-
-    # for a1 in np.linspace(interval_start, interval_end, num = divisions):
-    #     for a2 in np.linspace(interval_start, interval_end, num = divisions):
-    #         for a3 in np.linspace(interval_start, interval_end, num = divisions):
-    #
-    #             torque = execute(a1, a2, a3)
-    #             if torque is not None and torque < minTorque:
-    #                 minTorque = torque
-    #                 a1_F = a1
-    #                 a2_F = a2
-    #                 a3_F = a3
-    #                 print("Current Torque:" + str(minTorque))
-    #                 print("lengths: " + str(a1) + " " + str(a2) + " " + str(a3))
