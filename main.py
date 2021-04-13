@@ -102,9 +102,9 @@ if __name__ == '__main__':
     a2_F = 0
     a3_F = 0
 
-    interval_start = 0.1
-    interval_end = 5
-    divisions = 100
+    interval_start = 0.85
+    interval_end = 3
+    divisions = 50
     iterator = 0
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -123,5 +123,5 @@ if __name__ == '__main__':
 
                 if data[0] < minTorque:
                     minTorque = data[0]
-                    print("Current Torque:" + str(minTorque))
+                    print("Current Torque: " + str(minTorque))
                     print("lengths: " + str(data[1]) + " " + str(data[2]) + " " + str(data[3]))
