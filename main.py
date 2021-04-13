@@ -28,7 +28,7 @@ def checkValid(a1: float, a2: float, Ex: float, Ey: float):
 
 # Calculate torque on base from x coords, length, and geometry const
 def calcTorque(x_1: float, x_2: float, length: float, geoConst: int):
-    return (x_1 + x_2 / 2) * geoConst * length * 9.81
+    return ((x_1 + x_2) / 2) * geoConst * length * 9.81
 
 
 def calcLinkAngles(Ex: float, Ey: float, a1: float, a2: float):
@@ -77,7 +77,7 @@ def execute(a1: float, a2: float, a3: float):
         # calculate torque
         torque = calcTorque(0, a1_x, a1, geo_consts[0])
         torque += calcTorque(a1_x, a2_x, a2, geo_consts[1])
-        torque += calcTorque(a2_x, Ex, a3, geo_consts[2])
+        torque += calcTorque(a2_x, g_x[pos], a3, geo_consts[2])
         torque += g_x[pos] * 5 * 9.81
 
         # add to final torque
