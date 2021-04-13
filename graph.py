@@ -20,7 +20,7 @@ for pos in range(0, 3):
     Ey = g_y[pos] - ydist
 
     q2_p = math.acos((math.pow(Ex, 2) + math.pow(Ey, 2) - math.pow(a1, 2) - math.pow(a2, 2)) / (2 * a1 * a2));
-    q1_p = math.atan(Ey / Ex) + math.atan((a2 * math.sin(q2_p)) / (math.sqrt(math.pow(Ex, 2) + math.pow(Ey, 2))))
+    q1_p = math.atan(Ey / Ex) + math.atan((a2 * math.sin(q2_p)) / (2 * a1 * a2))
 
     a1_x_p = math.cos(q1_p) * a1
     a1_y_p = math.sin(q1_p) * a1
