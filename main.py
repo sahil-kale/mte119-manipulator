@@ -103,9 +103,10 @@ if __name__ == '__main__':
     a2_F = 0
     a3_F = 0
 
-    interval_start = 0.01
-    interval_end = 5
-    divisions = 150
+    interval_start = 0
+    interval_end = 3
+    divisions = 300
+    iterator = 0
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = []
@@ -113,15 +114,21 @@ if __name__ == '__main__':
             for a2 in np.linspace(interval_start, interval_end, num = divisions):
                 for a3 in np.linspace(interval_start, interval_end, num = divisions):
                     futures.append(executor.submit(execute, a1 = a1, a2 = a2, a3 = a3))
+                    iterator += 1
+                    if(iterator % 10000 == 0):
+                        print("iteration: " + str(iterator) + " | %" + str(iterator/divisions**3*100))
+                    
 
         for future in concurrent.futures.as_completed(futures):
             if future.result() is not None:
                 data = future.result()
+                
 
                 if data[0] < minTorque:
                     minTorque = data[0]
                     print("Current Torque:" + str(minTorque))
                     print("lengths: " + str(data[1]) + " " + str(data[2]) + " " + str(data[3]))
+                    
 
     # for a1 in np.linspace(interval_start, interval_end, num = divisions):
     #     for a2 in np.linspace(interval_start, interval_end, num = divisions):
